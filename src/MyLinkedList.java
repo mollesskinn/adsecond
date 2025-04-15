@@ -5,7 +5,6 @@ public class MyLinkedList<E> implements Iterable<E> {
     private Node<E> tail;
     private int size;
 
-    // Сілтеме тізімінің элементі
     private static class Node<E> {
         E data;
         Node<E> next;
@@ -16,7 +15,6 @@ public class MyLinkedList<E> implements Iterable<E> {
         }
     }
 
-    // Әдіс элемент қосу
     public void add(E element) {
         Node<E> newNode = new Node<>(element);
         if (tail == null) {
@@ -29,7 +27,6 @@ public class MyLinkedList<E> implements Iterable<E> {
         size++;
     }
 
-    // Әдіс элемент алу
     public E get(int index) {
         if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
         Node<E> current = head;
@@ -39,7 +36,6 @@ public class MyLinkedList<E> implements Iterable<E> {
         return current.data;
     }
 
-    // Әдіс элементті жою
     public boolean remove(E element) {
         Node<E> current = head;
         while (current != null) {
@@ -62,12 +58,10 @@ public class MyLinkedList<E> implements Iterable<E> {
         return false;
     }
 
-    // Әдіс өлшемін алу
     public int size() {
         return size;
     }
 
-    // Iterator әдісі
     @Override
     public Iterator<E> iterator() {
         return new Iterator<E>() {
