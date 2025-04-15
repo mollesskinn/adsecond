@@ -10,5 +10,5 @@ public interface MyList<E> extends Iterable<E> {
     boolean isEmpty();
     void clear();
     boolean contains(E element);
-    Iterator<E> iterator(); // МІНДЕТТІ түрде болу керек
+    Iterator<E> iterator(); 
 }
