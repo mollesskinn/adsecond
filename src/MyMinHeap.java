@@ -1,38 +1,47 @@
-public class MyMinHeap<E extends Comparable<E>> {
-    private MyArrayList<E> heap = new MyArrayList<>();
+public class MyMinHeap {
+    private MyArrayList<Integer> heap;
 
-    public void add(E element) {
-        heap.add(element);
+    public MyMinHeap() {
+        heap = new MyArrayList<>();
+    }
+
+    public void add(int val) {
+        heap.add(val);
         heapifyUp(heap.size() - 1);
     }
 
-    public E remove() {
+    public int peek() {
         if (heap.size() == 0) throw new IllegalStateException("Heap is empty");
-        E root = heap.get(0);
+        return heap.get(0);
+    }
+
+    public int removeMin() {
+        if (heap.size() == 0) throw new IllegalStateException("Heap is empty");
+        int min = heap.get(0);
         heap.set(0, heap.get(heap.size() - 1));
         heap.remove(heap.size() - 1);
         heapifyDown(0);
-        return root;
+        return min;
     }
 
     private void heapifyUp(int index) {
-        while (index > 0 && heap.get(parent(index)).compareTo(heap.get(index)) > 0) {
-            swap(index, parent(index));
-            index = parent(index);
+        while (index > 0) {
+            int parent = (index - 1) / 2;
+            if (heap.get(index) < heap.get(parent)) {
+                swap(index, parent);
+                index = parent;
+            } else break;
         }
     }
 
     private void heapifyDown(int index) {
-        int left = leftChild(index);
-        int right = rightChild(index);
         int smallest = index;
+        int left = index * 2 + 1;
+        int right = index * 2 + 2;
 
-        if (left < heap.size() && heap.get(left).compareTo(heap.get(smallest)) < 0) {
-            smallest = left;
-        }
-        if (right < heap.size() && heap.get(right).compareTo(heap.get(smallest)) < 0) {
-            smallest = right;
-        }
+        if (left < heap.size() && heap.get(left) < heap.get(smallest)) smallest = left;
+        if (right < heap.size() && heap.get(right) < heap.get(smallest)) smallest = right;
+
         if (smallest != index) {
             swap(index, smallest);
             heapifyDown(smallest);
@@ -40,28 +49,16 @@ public class MyMinHeap<E extends Comparable<E>> {
     }
 
     private void swap(int i, int j) {
-        E temp = heap.get(i);
+        int temp = heap.get(i);
         heap.set(i, heap.get(j));
         heap.set(j, temp);
     }
 
-    private int parent(int index) {
-        return (index - 1) / 2;
-    }
-
-    private int leftChild(int index) {
-        return 2 * index + 1;
-    }
-
-    private int rightChild(int index) {
-        return 2 * index + 2;
+    public int size() {
+        return heap.size();
     }
 
     public boolean isEmpty() {
         return heap.size() == 0;
-    }
-
-    public int size() {
-        return heap.size();
     }
 }
