@@ -1,33 +1,44 @@
 public class Main {
     public static void main(String[] args) {
-        
+        System.out.println("Testing MyStack:");
         MyStack<Integer> stack = new MyStack<>();
         stack.push(10);
         stack.push(20);
-        stack.push(30);
+        System.out.println(stack.pop()); // 20
+        System.out.println(stack.peek()); // 10
 
-        System.out.println("Stack peek: " + stack.peek());
-        System.out.println("Popped from stack: " + stack.pop());
-        System.out.println("Stack size after pop: " + stack.size());
+        System.out.println("\nTesting MyQueue:");
+        MyQueue<String> queue = new MyQueue<>();
+        queue.enqueue("A");
+        queue.enqueue("B");
+        System.out.println(queue.dequeue()); // A
+        System.out.println(queue.peek()); // B
 
-        
-        MyQueue<Integer> queue = new MyQueue<>();
-        queue.enqueue(10);
-        queue.enqueue(20);
-        queue.enqueue(30);
+        System.out.println("\nTesting MyMinHeap:");
+        MyMinHeap heap = new MyMinHeap();
+        heap.add(5);
+        heap.add(3);
+        heap.add(8);
+        System.out.println(heap.removeMin()); // 3
+        System.out.println(heap.peek()); // 5
 
-        System.out.println("Queue peek: " + queue.peek());
-        System.out.println("Dequeued from queue: " + queue.dequeue());
-        System.out.println("Queue size after dequeue: " + queue.size());
+        System.out.println("\nTesting MyArrayList:");
+        MyArrayList<String> arrayList = new MyArrayList<>();
+        arrayList.add("one");
+        arrayList.add("two");
+        arrayList.addFirst("zero");
+        for (String s : arrayList) {
+            System.out.println(s);
+        }
 
-        
-        MyMinHeap<Integer> minHeap = new MyMinHeap<>();
-        minHeap.add(30);
-        minHeap.add(10);
-        minHeap.add(20);
-
-        System.out.println("MinHeap remove: " + minHeap.remove());
-        System.out.println("MinHeap size after remove: " + minHeap.size());
+        System.out.println("\nTesting MyLinkedList:");
+        MyLinkedList<Integer> linkedList = new MyLinkedList<>();
+        linkedList.add(1);
+        linkedList.add(2);
+        linkedList.addFirst(0);
+        linkedList.removeLast();
+        for (int val : linkedList) {
+            System.out.println(val);
+        }
     }
 }
-
