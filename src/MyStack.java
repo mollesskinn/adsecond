@@ -1,20 +1,24 @@
-public class MyStack<E> {
-    private MyLinkedList<E> list = new MyLinkedList<>();
+public class MyStack<T> {
+    private MyList<T> list;
 
-    public void push(E element) {
-        list.add(element);
+    public MyStack() {
+        list = new MyArrayList<>();
     }
 
-    public E pop() {
-        if (list.size() == 0) throw new IllegalStateException("Stack is empty");
-        E element = list.get(list.size() - 1);
-        list.remove(element);
-        return element;
+    public void push(T item) {
+        list.addLast(item);
     }
 
-    public E peek() {
-        if (list.size() == 0) throw new IllegalStateException("Stack is empty");
-        return list.get(list.size() - 1);
+    public T pop() {
+        if (isEmpty()) throw new IllegalStateException("Stack is empty");
+        T item = list.getLast();
+        list.removeLast();
+        return item;
+    }
+
+    public T peek() {
+        if (isEmpty()) throw new IllegalStateException("Stack is empty");
+        return list.getLast();
     }
 
     public boolean isEmpty() {
