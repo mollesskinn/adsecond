@@ -169,3 +169,21 @@ public class MyLinkedList<T> implements MyList<T> {
     public int size() {
         return size;
     }
+    
+    @Override
+    public Iterator<T> iterator() {
+        return new Iterator<T>() {
+            MyNode current = head;
+            public boolean hasNext() {
+                return current != null;
+            }
+
+            public T next() {
+                if (!hasNext()) throw new NoSuchElementException();
+                T data = current.data;
+                current = current.next;
+                return data;
+            }
+        };
+    }
+}
