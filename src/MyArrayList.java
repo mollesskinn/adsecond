@@ -1,63 +1,135 @@
-import java.util.Arrays;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-public class MyArrayList<E> implements MyList<E> {
-    private Object[] array;
+public class MyArrayList<T> implements MyList<T> {
+    private Object[] data;
     private int size;
+    private static final int INITIAL_CAPACITY = 10;
 
     public MyArrayList() {
-        array = new Object[10];
+        data = new Object[INITIAL_CAPACITY];
         size = 0;
     }
 
-    @Override
-    public void add(E element) {
-        ensureCapacity();
-        array[size++] = element;
+    private void ensureCapacity() {
+        if (size >= data.length) {
+            Object[] newData = new Object[data.length * 2];
+            System.arraycopy(data, 0, newData, 0, data.length);
+            data = newData;
+        }
     }
 
     @Override
-    public void add(int index, E element) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+    public void add(T item) {
         ensureCapacity();
-        System.arraycopy(array, index, array, index + 1, size - index);
-        array[index] = element;
+        data[size++] = item;
+    }
+
+    @Override
+    public void add(int index, T item) {
+        if (index < 0 || index > size) throw new IndexOutOfBoundsException();
+        ensureCapacity();
+        System.arraycopy(data, index, data, index + 1, size - index);
+        data[index] = item;
         size++;
     }
 
     @Override
-    public E get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
-        return (E) array[index];
+    public void set(int index, T item) {
+        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
+        data[index] = item;
     }
 
     @Override
-    public E remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
-        E removedElement = (E) array[index];
-        int numMoved = size - index - 1;
-        if (numMoved > 0) {
-            System.arraycopy(array, index + 1, array, index, numMoved);
-        }
-        array[--size] = null;
-        return removedElement;
+    public T get(int index) {
+        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
+        return (T) data[index];
     }
 
     @Override
-    public boolean remove(E element) {
-        for (int i = 0; i < size; i++) {
-            if (array[i].equals(element)) {
-                remove(i);
-                return true;
+    public T getFirst() {
+        return get(0);
+    }
+
+    @Override
+    public T getLast() {
+        return get(size - 1);
+    }
+
+    @Override
+    public void addFirst(T item) {
+        add(0, item);
+    }
+
+    @Override
+    public void addLast(T item) {
+        add(item);
+    }
+
+    @Override
+    public void remove(int index) {
+        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
+        System.arraycopy(data, index + 1, data, index, size - index - 1);
+        data[--size] = null;
+    }
+
+    @Override
+    public void removeFirst() {
+        remove(0);
+    }
+
+    @Override
+    public void removeLast() {
+        remove(size - 1);
+    }
+
+    @Override
+    public void sort() {
+        for (int i = 0; i < size - 1; i++) {
+            for (int j = 0; j < size - 1 - i; j++) {
+                Comparable<T> a = (Comparable<T>) data[j];
+                T b = (T) data[j + 1];
+                if (a.compareTo(b) > 0) {
+                    Object temp = data[j];
+                    data[j] = data[j + 1];
+                    data[j + 1] = temp;
+                }
             }
         }
-        return false;
+    }
+
+    @Override
+    public int indexOf(Object obj) {
+        for (int i = 0; i < size; i++) {
+            if (data[i].equals(obj)) return i;
+        }
+        return -1;
+    }
+
+    @Override
+    public int lastIndexOf(Object obj) {
+        for (int i = size - 1; i >= 0; i--) {
+            if (data[i].equals(obj)) return i;
+        }
+        return -1;
+    }
+
+    @Override
+    public boolean exists(Object obj) {
+        return indexOf(obj) != -1;
+    }
+
+    @Override
+    public Object[] toArray() {
+        Object[] result = new Object[size];
+        System.arraycopy(data, 0, result, 0, size);
+        return result;
+    }
+
+    @Override
+    public void clear() {
+        for (int i = 0; i < size; i++) data[i] = null;
+        size = 0;
     }
 
     @Override
@@ -66,55 +138,20 @@ public class MyArrayList<E> implements MyList<E> {
     }
 
     @Override
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-    @Override
-    public void clear() {
-        for (int i = 0; i < size; i++) {
-            array[i] = null;
-        }
-        size = 0;
-    }
-
-    @Override
-    public boolean contains(E element) {
-        for (int i = 0; i < size; i++) {
-            if (array[i].equals(element)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public Iterator<E> iterator() {
-        return new Iterator<E>() {
-            private int index = 0;
+    public Iterator<T> iterator() {
+        return new Iterator<T>() {
+            int current = 0;
 
             @Override
             public boolean hasNext() {
-                return index < size;
+                return current < size;
             }
 
             @Override
-            public E next() {
-                return (E) array[index++];
+            public T next() {
+                if (!hasNext()) throw new NoSuchElementException();
+                return (T) data[current++];
             }
         };
-    }
-
-    private void ensureCapacity() {
-        if (size == array.length) {
-            array = Arrays.copyOf(array, size * 2);
-        }
-    }
-
-    public void set(int index, E element) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
-        array[index] = element;
     }
 }
