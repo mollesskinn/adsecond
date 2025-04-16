@@ -1,20 +1,24 @@
-public class MyQueue<E> {
-    private MyLinkedList<E> list = new MyLinkedList<>();
+public class MyQueue<T> {
+    private MyList<T> list;
 
-    public void enqueue(E element) {
-        list.add(element);
+    public MyQueue() {
+        list = new MyLinkedList<>();
     }
 
-    public E dequeue() {
-        if (list.size() == 0) throw new IllegalStateException("Queue is empty");
-        E element = list.get(0);
-        list.remove(element);
-        return element;
+    public void enqueue(T item) {
+        list.addLast(item);
     }
 
-    public E peek() {
-        if (list.size() == 0) throw new IllegalStateException("Queue is empty");
-        return list.get(0);
+    public T dequeue() {
+        if (isEmpty()) throw new IllegalStateException("Queue is empty");
+        T item = list.getFirst();
+        list.removeFirst();
+        return item;
+    }
+
+    public T peek() {
+        if (isEmpty()) throw new IllegalStateException("Queue is empty");
+        return list.getFirst();
     }
 
     public boolean isEmpty() {
